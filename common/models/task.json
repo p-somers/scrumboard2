@@ -1,0 +1,32 @@
+{
+  "name": "Task",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "remainingHours": {
+      "type": "number"
+    },
+    "notes": {
+      "type": [
+        "string"
+      ]
+    }
+  },
+  "validations": [],
+  "relations": {
+    "status": {
+      "type": "hasOne",
+      "model": "Column",
+      "foreignKey": ""
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

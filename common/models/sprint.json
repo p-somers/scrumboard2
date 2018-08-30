@@ -1,0 +1,32 @@
+{
+  "name": "Sprint",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "number": {
+      "type": "number",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "team": {
+      "type": "belongsTo",
+      "model": "Team",
+      "foreignKey": ""
+    },
+    "stories": {
+      "type": "hasMany",
+      "model": "Story",
+      "foreignKey": "",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

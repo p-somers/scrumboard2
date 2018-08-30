@@ -1,0 +1,29 @@
+{
+  "name": "Column",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "order": {
+      "type": "number",
+      "required": true,
+      "default": 1
+    }
+  },
+  "validations": [],
+  "relations": {
+    "team": {
+      "type": "belongsTo",
+      "model": "Team",
+      "foreignKey": ""
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

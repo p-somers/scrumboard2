@@ -1,0 +1,60 @@
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ],
+    "mixins": [
+      "loopback/common/mixins",
+      "loopback/server/mixins",
+      "../common/mixins",
+      "./mixins"
+    ]
+  },
+  "User": {
+    "dataSource": "mongoDS",
+    "public": false
+  },
+  "AccessToken": {
+    "dataSource": "mongoDS",
+    "public": false
+  },
+  "ACL": {
+    "dataSource": "mongoDS",
+    "public": false
+  },
+  "RoleMapping": {
+    "dataSource": "mongoDS",
+    "public": false
+  },
+  "Role": {
+    "dataSource": "mongoDS",
+    "public": false
+  },
+  "Team": {
+    "dataSource": "mongoDS",
+    "public": true
+  },
+  "Sprint": {
+    "dataSource": "mongoDS",
+    "public": true
+  },
+  "Story": {
+    "dataSource": "mongoDS",
+    "public": true
+  },
+  "Task": {
+    "dataSource": "mongoDS",
+    "public": true
+  },
+  "Column": {
+    "dataSource": "mongoDS",
+    "public": true
+  },
+  "UserAccount": {
+    "dataSource": "mongoDS",
+    "public": true
+  }
+}

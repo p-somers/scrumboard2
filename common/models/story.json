@@ -1,0 +1,45 @@
+{
+  "name": "Story",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "points": {
+      "type": "number",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "string"
+    },
+    "acceptanceCriteria": {
+      "type": [
+        "string"
+      ],
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "sprint": {
+      "type": "belongsTo",
+      "model": "Sprint",
+      "foreignKey": ""
+    },
+    "tasks": {
+      "type": "hasMany",
+      "model": "Task",
+      "foreignKey": "",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

@@ -1,0 +1,40 @@
+{
+  "name": "Team",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "members": {
+      "type": "hasMany",
+      "model": "UserAccount",
+      "foreignKey": ""
+    },
+    "sprints": {
+      "type": "hasMany",
+      "model": "Sprint",
+      "foreignKey": "",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "columns": {
+      "type": "hasMany",
+      "model": "Column",
+      "foreignKey": "",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

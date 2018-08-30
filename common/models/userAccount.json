@@ -1,0 +1,39 @@
+{
+  "name": "UserAccount",
+  "base": "User",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "firstName": {
+      "type": "string",
+      "required": true
+    },
+    "lastName": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "tasks": {
+      "type": "hasOne",
+      "model": "Task",
+      "foreignKey": "",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "team": {
+      "type": "belongsTo",
+      "model": "Team",
+      "foreignKey": "",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [],
+  "methods": {}
+}
