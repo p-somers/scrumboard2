@@ -11,14 +11,16 @@ import VisibilityOff from "@material-ui/core/SvgIcon/SvgIcon";
 import Visibility from '@material-ui/icons/Visibility';
 
 import {withStyles} from '@material-ui/core/styles';
+import {post} from "../request";
 
 const styles = theme => ({
 });
 
 class LoginFormWindow extends React.Component {
   state = {
-    username: '',
-    password: ''
+    username: 'c@c.com',//TODO delete this
+    password: 'abc',
+    showPassword: false
   };
 
   constructor(props) {
@@ -36,18 +38,33 @@ class LoginFormWindow extends React.Component {
     };
   }
 
-  handleLoginButton = () => () => {
-
-  };
-
-  handleRegisterButton = () => () => {
-    this.props.onRegisterButton();
-  };
-
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
     });
+  };
+
+  handleLoginButton = () => () => {
+    let me = this;
+    let payload = {
+      'email': this.state.username,
+      'password': this.state.password
+    };
+    post(`/UserAccounts/login`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(me.props.onLogin)
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  handleRegisterButton = () => () => {
+    this.props.onRegisterButton();
   };
 
   render() {

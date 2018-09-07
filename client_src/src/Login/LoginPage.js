@@ -3,6 +3,9 @@ import {withStyles} from '@material-ui/core/styles';
 
 import LoginFormWindow from "../components/LoginFormWindow";
 import RegisterFormWindow from "../components/RegisterFormWindow";
+import Snackbar from "@material-ui/core/Snackbar/Snackbar";
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 const styles = theme => ({
   appBar: {
@@ -50,26 +53,87 @@ const styles = theme => ({
 class LoginPage extends React.Component {
   state = {
     'page': 'login',
-    'prevPage': 'login'
+    'prevPage': 'login',
+    'userConfirmed': false
   };
+
+  onRegister = () => () => {
+    this.setState({userConfirmed: true, page: 'login'});
+  };
+
 
   changePage = page => () => {
     this.setState({page});
   };
 
-  render() {
-    switch(this.state.page) {
+  onFieldChanged = name => event => {
+    this.setState({
+      [name]: event.target.value,
+    });
+  };
+
+  handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({open: false});
+  };
+
+  content() {
+    switch (this.state.page) {
       case 'login':
         return (
-          <LoginFormWindow onRegisterButton={this.changePage('register')}/>
+          <LoginFormWindow
+            handleChange={this.onFieldChanged}
+            onRegisterButton={this.changePage('register')}
+            onLogin={this.props.onLogin}
+          />
         );
       case 'register':
         return (
-          <RegisterFormWindow onBackButton={this.changePage('login')}/>
+          <RegisterFormWindow
+            //handleChange={this.onFieldChanged}
+            onRegister={this.onRegister()}
+            onBackButton={this.changePage('login')}
+            onSubmitButton={this.registerUser}
+          />
         );
       default:
         return;
     }
+  }
+
+  render() {
+    let {classes} = this.props;
+    return (
+      <React.Fragment>
+        {this.content()}
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={this.state.userConfirmed}
+          onClose={this.handleSnackbarClose}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span>User Created! Please login</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={this.handleSnackbarClose}
+            >
+              <CloseIcon/>
+            </IconButton>,
+          ]}
+        />
+      </React.Fragment>
+    )
   }
 }
 
