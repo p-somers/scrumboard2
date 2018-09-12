@@ -5,12 +5,13 @@ import {withStyles} from "@material-ui/core";
 import IconButton from '@material-ui/core/IconButton';
 import Drawer from "@material-ui/core/Drawer/Drawer";
 import Divider from "@material-ui/core/Divider/Divider";
-import NewStoryDialog from "./components/NewStoryDialog";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener/ClickAwayListener";
 
-import {get} from './request';
+import {get, post} from './request';
 import Header from './components/Header';
 import LeftMenu from "./components/menu/LeftMenu";
+import NewStoryDialog from "./components/popupDialogs/NewStory";
+import ManageSprintsDialog from "./components/popupDialogs/ManageSprints";
 
 const styles = theme => ({
   root: {
@@ -35,8 +36,10 @@ const styles = theme => ({
 
 class HomePage extends React.Component {
   state = {
+    currentSprint: 0,
     user: {},
     team: {},
+    dataLoaded: false,
     menuOpen: false,
     popup: ''
   };
@@ -68,20 +71,56 @@ class HomePage extends React.Component {
     get(`/UserAccounts/${ userId }`)
       .then(userInfo => user = userInfo)
       .then(() => get(`/Teams/${ user.teamId }?filter[include]=sprints&filter[include]=columns`))
-      .then(team => this.setState({user, team}))
+      .then(team => this.setState({user, team, dataLoaded: true}))
       .catch(error => {
         console.error('Error fetching user and team');
       });
   }
 
+  newSprint = () => {
+    post(`/Teams/${this.state.team.id}/Sprints`, {
+      body: {number: "2"}
+    }).then(result => {
+        debugger;
+      });
+  };
+
+  getNextStoryNumber() {
+    let {sprints} = this.state.team;
+    let storyNum = 1;
+    if (sprints.length > 0) {
+      let {stories} = sprints[sprints.length - 1];
+      if (stories.length > 0) {
+        storyNum = stories[stories.length - 1].number + 1;
+      }
+    }
+    return storyNum;
+  }
+
   popups() {
-    return (
-      <React.Fragment>
-        <NewStoryDialog
-          handleClose={this.closePopup}
-          open={this.state.popup === 'newStory'}/>
-      </React.Fragment>
-    );
+    if (this.state.dataLoaded) {
+      switch (this.state.popup) {
+        case 'newStory':
+          return (
+              <NewStoryDialog
+                nextStoryNumber={this.getNextStoryNumber()}
+                handleClose={this.closePopup}
+                open={this.state.popup === 'newStory'}
+              />
+          );
+        case 'sprints':
+          return (
+            <ManageSprintsDialog
+              currentSprint={this.state.currentSprint}
+              sprints={this.state.team.sprints}
+              handleClose={this.closePopup}
+              onNewSprintButton={this.newSprint}
+              open={this.state.popup === 'sprints'}
+            />
+          );
+        default: break;
+      }
+    }
   }
 
   render() {

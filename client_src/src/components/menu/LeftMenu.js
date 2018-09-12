@@ -4,8 +4,10 @@ import List from '@material-ui/core/List';
 import ListItem from "@material-ui/core/ListItem/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon/ListItemIcon";
 import AddIcon from '@material-ui/icons/Add';
+import ListIcon from '@material-ui/icons/List';
 
 import {withStyles} from "@material-ui/core";
+import Tooltip from "@material-ui/core/Tooltip/Tooltip";
 
 const styles = theme => ({
 
@@ -18,9 +20,18 @@ class LeftMenu extends React.Component {
   render() {
     return (
       <List>
+        <ListItem button onClick={this.onMenuItem('sprints')}>
+          <ListItemIcon>
+            <Tooltip title={"Manage and Select Sprints"}>
+              <ListIcon/>
+            </Tooltip>
+          </ListItemIcon>
+        </ListItem>
         <ListItem button onClick={this.onMenuItem('newStory')}>
           <ListItemIcon>
-            <AddIcon/>
+            <Tooltip title={"New Story"}>
+              <AddIcon/>
+            </Tooltip>
           </ListItemIcon>
         </ListItem>
       </List>

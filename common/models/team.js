@@ -2,6 +2,7 @@
 
 module.exports = function(Team) {
   let app;
+  //TODO: this
   const defaultColumns = [
     'Not Started', 'In Progress', 'Done'
   ];
