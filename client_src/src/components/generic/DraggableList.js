@@ -35,9 +35,9 @@ export default class DraggableList extends React.Component {
         {this.props.children.map((child, index) => {
           return (
             <Draggable
-              initialPos={{x: 0, y: 0}}
               key={index}
-            >{child}
+            >
+              {child}
             </Draggable>
           )
         })}

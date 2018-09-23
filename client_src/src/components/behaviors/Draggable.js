@@ -3,8 +3,12 @@ import React from 'react';
 import './Draggable.css';
 
 class Draggable extends React.Component {
+  originalPos = { // on the page
+    top: 0,
+    left: 0
+  };
+
   state = {
-    originalPos: null, // on the page
     pos: {x: 0, y: 0},
     dragging: false,
     rel: null // position relative to the cursor
@@ -25,6 +29,14 @@ class Draggable extends React.Component {
     }
   };
 
+  componentDidMount() {
+    let domNode = this.domRef.current.getBoundingClientRect();
+    this.originalPos = {
+      top: domNode.top,
+      left: domNode.left
+    }
+  }
+
   onMouseDown = e => {
     // only left mouse button
     if (e.button === 0) {
@@ -39,10 +51,6 @@ class Draggable extends React.Component {
         rel: {
           x: e.pageX - position.left,
           y: e.pageY - position.top
-        },
-        originalPos: {
-          top: draggableNode.top,
-          left: draggableNode.left
         }
       });
       e.stopPropagation();
@@ -58,11 +66,10 @@ class Draggable extends React.Component {
 
   onMouseMove = e => {
     if (this.state.dragging) {
-      let container = this.domRef.current.parentNode.getBoundingClientRect();
       this.setState({
         pos: {
-          x: (e.pageX - this.state.originalPos.left) - this.state.rel.x,
-          y: (e.pageY - this.state.originalPos.top) - this.state.rel.y
+          x: (e.pageX - this.originalPos.left) - this.state.rel.x,
+          y: (e.pageY - this.originalPos.top) - this.state.rel.y
         }
       });
       e.stopPropagation();
