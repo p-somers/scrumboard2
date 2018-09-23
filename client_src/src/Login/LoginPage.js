@@ -72,7 +72,7 @@ class LoginPage extends React.Component {
     });
   };
 
-  handleSnackbarClose = (event, reason) => {
+  onSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -115,7 +115,7 @@ class LoginPage extends React.Component {
             horizontal: 'center',
           }}
           open={this.state.userConfirmed}
-          onClose={this.handleSnackbarClose}
+          onClose={this.onSnackbarClose}
           ContentProps={{
             'aria-describedby': 'message-id',
           }}
@@ -126,7 +126,7 @@ class LoginPage extends React.Component {
               aria-label="Close"
               color="inherit"
               className={classes.close}
-              onClick={this.handleSnackbarClose}
+              onClick={this.onSnackbarClose}
             >
               <CloseIcon/>
             </IconButton>,

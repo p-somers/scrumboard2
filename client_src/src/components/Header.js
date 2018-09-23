@@ -43,7 +43,7 @@ class Header extends React.Component {
           <MenuIcon/>
         </IconButton>
         <Typography variant="title" color="inherit" className={classes.flex}>
-          {this.props.team.name} - Sprint #
+          {this.props.team.name} - Sprint #{this.props.sprint}
         </Typography>
       </Toolbar>
     </AppBar>);

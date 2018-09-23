@@ -46,6 +46,7 @@ class NewStory extends React.Component {
         className={classes.dialog}
         onClose={this.handleClose}
         aria-labelledby={"new-story-dialog"}
+        open={true}
         {...this.props}>
         <DialogTitle id={"new-story-dialog"}>New Story</DialogTitle>
         <DialogContent>

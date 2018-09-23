@@ -5,6 +5,7 @@ import ListItem from "@material-ui/core/ListItem/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon/ListItemIcon";
 import AddIcon from '@material-ui/icons/Add';
 import ListIcon from '@material-ui/icons/List';
+import ColumnsIcon from '@material-ui/icons/ViewColumn';
 
 import {withStyles} from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip/Tooltip";
@@ -31,6 +32,13 @@ class LeftMenu extends React.Component {
           <ListItemIcon>
             <Tooltip title={"New Story"}>
               <AddIcon/>
+            </Tooltip>
+          </ListItemIcon>
+        </ListItem>
+        <ListItem button onClick={this.onMenuItem('columns')}>
+          <ListItemIcon>
+            <Tooltip title={"Columns"}>
+              <ColumnsIcon/>
             </Tooltip>
           </ListItemIcon>
         </ListItem>

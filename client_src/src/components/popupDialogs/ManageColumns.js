@@ -8,20 +8,16 @@ import TextField from "@material-ui/core/TextField/TextField";
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Button from "@material-ui/core/Button/Button";
+import DraggableList from "../generic/DraggableList";
+import AddIcon from "@material-ui/core/SvgIcon/SvgIcon";
 
 const styles = theme => ({
 });
 
-class ManageSprints extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      sprint: this.props.currentSprint || 0
-    };
-  }
+class ManageColumns extends React.Component {
 
-  onNewSprintButton = () => {
-    this.props.onNewSprintButton();
+  onDoneButton = () => {
+    this.props.onDoneButton();
   };
 
   // handleChange = name => event => {
@@ -39,7 +35,7 @@ class ManageSprints extends React.Component {
   };
 
   render() {
-    let {classes, sprints, value} = this.props;
+    let {classes, columns, value} = this.props;
 
     return (
       <Dialog
@@ -47,39 +43,27 @@ class ManageSprints extends React.Component {
         fullWidth={true}
         className={classes.dialog}
         onClose={this.handleClose}
-        aria-labelledby={"manage-sprints-dialog"}
+        aria-labelledby={"manage-columns-dialog"}
         open={true}
         value={value}
-        >
-        <DialogTitle id={"manage-sprints-dialog"}>Manage and Select Sprints</DialogTitle>
+      >
+        <DialogTitle id={"manage-columns-dialog"}>
+          <span>Manage Columns</span>
+          <AddIcon/>
+        </DialogTitle>
         <DialogContent>
-          <TextField
-            fullWidth={true}
-            id="select-sprint"
-            select
-            className={classes.textField}
-            onChange={this.onSprintSelected}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu,
-              },
-            }}
-            margin="normal"
-            value={this.state.sprint}
-          >
-            {sprints.map(sprint => (
-              <MenuItem key={sprint.number} value={sprint.number}>
-                {sprint.number}
-              </MenuItem>
-            ))}
-          </TextField>
+          <DraggableList>
+            <div>test1</div>
+            <div>test2</div>
+            <div>test3</div>
+          </DraggableList>
         </DialogContent>
         <DialogActions>
           <Button onClick={this.handleClose} color="primary">
             Close
           </Button>
-          <Button onClick={this.onNewSprintButton} color="primary" autoFocus>
-            New Sprint
+          <Button onClick={this.onDoneButton} color="primary" autoFocus>
+            Done
           </Button>
         </DialogActions>
       </Dialog>
@@ -87,4 +71,4 @@ class ManageSprints extends React.Component {
   }
 }
 
-export default withStyles(styles)(ManageSprints);
+export default withStyles(styles)(ManageColumns);
