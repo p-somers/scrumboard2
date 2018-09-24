@@ -78,13 +78,20 @@ class Draggable extends React.Component {
   };
 
   render() {
+    let newPosition = {};
+    switch (this.props.dragDirection) {
+      case 'horizontal': newPosition.left = this.state.pos.x + 'px'; break;
+      case 'vertical': newPosition.top = this.state.pos.y + 'px'; break;
+      default: newPosition = {
+        left: this.state.pos.x + 'px',
+        top: this.state.pos.y + 'px'
+      }
+    }
+
     return (<div
       className={'draggable'}
       onMouseDownCapture={this.onMouseDown}
-      style={{
-        left: this.state.pos.x + 'px',
-        top: this.state.pos.y + 'px'
-      }}
+      style={newPosition}
       ref={this.domRef}
     >
       {this.props.children}
