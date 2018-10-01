@@ -1,47 +1,48 @@
 import React from 'react';
 
 import './DraggableList.css';
-import Draggable from "../behaviors/Draggable";
+import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
+import DraggableListItem from "./DraggableListItem";
+//import Draggable from "../behaviors/DraggableItem";
 
 export default class DraggableList extends React.Component {
-  onDragOver = event => {
-    let {currentDragItem} = this.state;
-    let other = event.target.parentNode;
-
-    if (this.isBefore(currentDragItem, other))
-      event.target.parentNode.insertBefore(currentDragItem, other);
-    else
-      event.target.parentNode.insertBefore(currentDragItem, other.nextSibling);
-    event.stopPropagation();
+  state = {
+    items: this.props.children
   };
 
-  onDragStart = event => {
-    event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("text/plain", null);
-    this.setState({currentDragItem: event.target});
-  };
-
-  isBefore = (first, second) => {
-    if (second.parentNode === first.parentNode)
-      for (let cur = first.previousSibling; cur && cur.nodeType !== 9; cur = cur.previousSibling)
-        if (cur === second)
-          return true;
-    return false;
+  onDragEnd = result => {
+    let {destination, source, draggableId} = result;
+    if (destination) {
+      let locationDidChange = source.droppableId !== destination.droppableId || source.index !== destination.index;
+      if (locationDidChange) {
+        let items = Array.from(this.state.items);
+        let draggedItem = items[source.index];
+        items.splice(source.index, 1);
+        items.splice(destination.index, 0, draggedItem);
+        this.setState({items});
+      }
+    }
   };
 
   render() {
     return (
-      <div className={'DraggableList'}>
-        {this.props.children.map((child, index) => {
-          return (
-            <Draggable
-              key={index}
-            >
-              {child}
-            </Draggable>
-          )
-        })}
-      </div>
+      <DragDropContext onDragEnd={this.onDragEnd}>
+        <Droppable droppableId={"columnsList"}>
+          {provided => (
+            <div
+              className={"draggable-list"}
+              ref={provided.innerRef}>
+              {this.state.items.map((child, index) => {
+                return (
+                  <DraggableListItem index={index} key={index}>
+                    {child}
+                  </DraggableListItem>
+                );
+              })}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     )
   }
 }

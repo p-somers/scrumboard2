@@ -13,7 +13,7 @@ import LeftMenu from "./components/menu/LeftMenu";
 import NewStoryDialog from "./components/popupDialogs/NewStory";
 import ManageSprintsDialog from "./components/popupDialogs/ManageSprints";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
-import ManageColumns from "./components/popupDialogs/ManageColumns";
+import ManageColumns from "./components/popupDialogs/manageColumns/ManageColumns";
 
 const styles = theme => ({
   root: {

@@ -4,12 +4,11 @@ import {withStyles} from '@material-ui/core/styles';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
-import TextField from "@material-ui/core/TextField/TextField";
-import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Button from "@material-ui/core/Button/Button";
-import DraggableList from "../generic/DraggableList";
+import DraggableList from "../../generic/DraggableList";
 import AddIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import ColumnListItem from "./ColumnListItem";
 
 const styles = theme => ({
 });
@@ -49,13 +48,12 @@ class ManageColumns extends React.Component {
       >
         <DialogTitle id={"manage-columns-dialog"}>
           <span>Manage Columns</span>
-          <AddIcon/>
         </DialogTitle>
         <DialogContent>
           <DraggableList>
-            <div>test1</div>
-            <div>test2</div>
-            <div>test3</div>
+            <ColumnListItem text={"test1"} />
+            <ColumnListItem text={"test2"} />
+            <ColumnListItem text={"test3"} />
           </DraggableList>
         </DialogContent>
         <DialogActions>

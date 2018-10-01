@@ -1,0 +1,24 @@
+.column-list-item {
+  display: flex;
+  flex-direction: row;
+}
+
+.column-list-item .drag-item-icon {
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.column-list-item:hover .drag-item-icon,
+.column-list-item:active .drag-item-icon {
+  visibility: visible;
+}
+
+.column-list-item .drag-item-text {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
