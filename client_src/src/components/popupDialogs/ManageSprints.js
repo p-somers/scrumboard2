@@ -34,8 +34,8 @@ class ManageSprints extends React.Component {
     this.props.onSprintSelected(event.target.value)
   };
 
-  handleClose = () => {
-    this.props.handleClose();
+  onClose = () => {
+    this.props.onClose();
   };
 
   render() {
@@ -46,7 +46,7 @@ class ManageSprints extends React.Component {
         maxWidth={'xs'}
         fullWidth={true}
         className={classes.dialog}
-        onClose={this.handleClose}
+        onClose={this.onClose}
         aria-labelledby={"manage-sprints-dialog"}
         open={true}
         value={value}
@@ -75,7 +75,7 @@ class ManageSprints extends React.Component {
           </TextField>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.handleClose} color="primary">
+          <Button onClick={this.onClose} color="primary">
             Close
           </Button>
           <Button onClick={this.onNewSprintButton} color="primary" autoFocus>

@@ -32,8 +32,8 @@ class NewStory extends React.Component {
 
   }
 
-  handleClose = () => {
-    this.props.handleClose();
+  onClose = () => {
+    this.props.onClose();
   };
 
   render() {
@@ -44,7 +44,7 @@ class NewStory extends React.Component {
         maxWidth={'md'}
         fullWidth={true}
         className={classes.dialog}
-        onClose={this.handleClose}
+        onClose={this.onClose}
         aria-labelledby={"new-story-dialog"}
         open={true}
         {...this.props}>
@@ -81,7 +81,7 @@ class NewStory extends React.Component {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.handleClose} color="primary">
+          <Button onClick={this.onClose} color="primary">
             Close
           </Button>
           <Button onClick={this.onSubmitButton} color="primary" autoFocus>

@@ -131,7 +131,7 @@ class HomePage extends React.Component {
           return (
               <NewStoryDialog
                 nextStoryNumber={this.getNextStoryNumber()}
-                handleClose={this.closePopup}
+                onClose={this.closePopup}
               />
           );
         case 'sprints':
@@ -139,7 +139,7 @@ class HomePage extends React.Component {
             <ManageSprintsDialog
               currentSprint={this.state.currentSprint}
               sprints={this.state.team.sprints}
-              handleClose={this.closePopup}
+              onClose={this.closePopup}
               onNewSprintButton={this.newSprint}
               onSprintSelected={this.onSprintSelected}
             />
@@ -147,7 +147,7 @@ class HomePage extends React.Component {
         case 'columns':
           return (
             <ManageColumns
-              handleClose={this.closePopup}
+              onClose={this.closePopup}
             />
           );
         default: break;

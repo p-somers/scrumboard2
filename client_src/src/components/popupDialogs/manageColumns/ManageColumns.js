@@ -7,57 +7,55 @@ import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Button from "@material-ui/core/Button/Button";
 import DraggableList from "../../generic/DraggableList";
-import AddIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import AddIcon from "@material-ui/icons/Add";
 import ColumnListItem from "./ColumnListItem";
 
-const styles = theme => ({
-});
+import "./ManageColumns.css"
+
+const styles = theme => ({});
 
 class ManageColumns extends React.Component {
+  state = {
+    columns: ["a", "b", "c"]
+  };
 
   onDoneButton = () => {
     this.props.onDoneButton();
   };
 
-  // handleChange = name => event => {
-  //   this.setState({
-  //     [name]: event.target.value,
-  //   });
-  // };
-
-  onSprintSelected = (event) => {
-    this.props.onSprintSelected(event.target.value)
-  };
-
-  handleClose = () => {
-    this.props.handleClose();
+  onClose = () => {
+    this.props.onClose();
   };
 
   render() {
-    let {classes, columns, value} = this.props;
+    let {classes, value} = this.props;
 
     return (
       <Dialog
         maxWidth={'xs'}
         fullWidth={true}
         className={classes.dialog}
-        onClose={this.handleClose}
+        onClose={this.onClose}
         aria-labelledby={"manage-columns-dialog"}
         open={true}
         value={value}
       >
         <DialogTitle id={"manage-columns-dialog"}>
-          <span>Manage Columns</span>
+          <div className={"dialog-title"}>
+            <div>Manage Columns</div>
+            <div className={"spacer"}/>
+            <div>
+              <AddIcon/>
+            </div>
+          </div>
         </DialogTitle>
         <DialogContent>
           <DraggableList>
-            <ColumnListItem text={"test1"} />
-            <ColumnListItem text={"test2"} />
-            <ColumnListItem text={"test3"} />
+            {this.state.columns.map(column => <ColumnListItem text={column}/>)}
           </DraggableList>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.handleClose} color="primary">
+          <Button onClick={this.onClose} color="primary">
             Close
           </Button>
           <Button onClick={this.onDoneButton} color="primary" autoFocus>
