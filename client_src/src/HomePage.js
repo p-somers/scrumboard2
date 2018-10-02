@@ -148,6 +148,8 @@ class HomePage extends React.Component {
           return (
             <ManageColumns
               onClose={this.closePopup}
+              onDone={this.closePopup}
+              team={this.state.team}
             />
           );
         default: break;

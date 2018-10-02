@@ -28,9 +28,11 @@ const request = (method, relativeUrl, opts) => {
 
 const get = request.bind(this, 'GET');
 const post = request.bind(this, 'POST');
+const put = request.bind(this, 'PUT');
 
 export {
   request,
   get,
-  post
+  post,
+  put
 };

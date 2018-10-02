@@ -1,8 +1,7 @@
-.dialog-title {
+DialogActions {
   display: flex;
-  flex-direction: row;
 }
 
-.dialog-title .spacer {
+.spacer {
   flex: 1;
 }

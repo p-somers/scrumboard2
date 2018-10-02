@@ -8,7 +8,9 @@ import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Button from "@material-ui/core/Button/Button";
 import DraggableList from "../../generic/DraggableList";
 import AddIcon from "@material-ui/icons/Add";
-import ColumnListItem from "./ColumnListItem";
+import EditableListItem from "./EditableListItem";
+
+import {put, post} from "../../../request.js";
 
 import "./ManageColumns.css"
 
@@ -16,11 +18,49 @@ const styles = theme => ({});
 
 class ManageColumns extends React.Component {
   state = {
-    columns: ["a", "b", "c"]
+    columns: this.props.team.columns || []
   };
 
   onDoneButton = () => {
-    this.props.onDoneButton();
+    Promise.all(this.state.columns.map((column, index) => {
+      let columnObj = {...column};
+      let url = `/Teams/${this.props.team.id}/columns`;
+      columnObj.order = index;
+      if (column.id) { // update if not new
+        return put(url + `/${column.id}`, {body: columnObj});
+      } else { // otherwise create
+        return post(url, {body: columnObj});
+      }
+    })).then(() => {
+      console.log(arguments);
+    });
+    this.props.onDone();
+  };
+
+  onNewColumnButton = () => {
+    let columns = this.state.columns;
+    columns.push({
+      title: "column " + (columns.length + 1), //TODO: something else
+      order: columns.length
+    });
+    this.setState({columns});
+  };
+
+  onEditColumn = index => newText => {
+    let columns = this.state.columns;
+    columns[index].title = newText;
+    this.setState({columns});
+  };
+
+  onColumnMoved = (from, to) => {
+    let columns = Array.from(this.state.columns);
+    columns[from].order = to;
+    columns[to].order = from;
+
+    let draggedColumn = columns[from];
+    columns.splice(from, 1);
+    columns.splice(to, 0, draggedColumn);
+    this.setState({columns});
   };
 
   onClose = () => {
@@ -41,20 +81,31 @@ class ManageColumns extends React.Component {
         value={value}
       >
         <DialogTitle id={"manage-columns-dialog"}>
-          <div className={"dialog-title"}>
-            <div>Manage Columns</div>
-            <div className={"spacer"}/>
-            <div>
-              <AddIcon/>
-            </div>
-          </div>
+          Manage Columns
         </DialogTitle>
         <DialogContent>
-          <DraggableList>
-            {this.state.columns.map(column => <ColumnListItem text={column}/>)}
+          <DraggableList onItemMoved={this.onColumnMoved}>
+            {this.state.columns.map((column, index) =>
+              <EditableListItem
+                key={index}
+                text={column.title}
+                onEdit={this.onEditColumn(index)}
+              />
+            )
+            }
           </DraggableList>
         </DialogContent>
         <DialogActions>
+          <Button
+            mini
+            variant="fab"
+            color="secondary"
+            aria-label="Add"
+            onClick={this.onNewColumnButton}
+            className={classes.button}>
+            <AddIcon/>
+          </Button>
+          <div className={"spacer"}/>
           <Button onClick={this.onClose} color="primary">
             Close
           </Button>
