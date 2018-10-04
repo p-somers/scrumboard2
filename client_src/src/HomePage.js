@@ -38,79 +38,119 @@ const styles = theme => ({
 
 class HomePage extends React.Component {
   state = {
-    currentSprint: 0,
+    currentSprintIndex: -1,
     user: {},
     team: {},
+    sprints: [],
+    columns: [],
+    stories: [],
     dataLoaded: false,
     menuOpen: false,
     popup: '',
     snackbar: ''
   };
-
-  componentDidMount() {
-    this.loadUser(this.props.userId)
-  }
-
+  setState = (newState) => {
+    // Promisifying setState
+    return new Promise(resolve => {
+      super.setState(newState, () => {
+        resolve()
+      });
+    });
+  };
   onMenuButton = () => {
     this.setState({menuOpen: true});
   };
-
   onMenuClose = () => {
     if (this.state.popup === '') {
       this.setState({menuOpen: false});
     }
   };
-
   onSnackbarClose = () => {
     this.setState({snackbar: ''});
   };
-
-  onSprintSelected = currentSprint => {
+  onColumnsChanged = () => {
+    this.closePopup();
+    this.loadColumns(this.state.team.id);
+  };
+  onSprintSelected = currentSprintIndex => {
     this.setState({
-      currentSprint,
+      currentSprintIndex,
       popup: '',
       menuOpen: false,
-      snackbar: `Sprint #${currentSprint} loaded`
+      snackbar: `Sprint #${currentSprintIndex} loaded`
     })
   };
-
   openPopup = name => {
     this.setState({popup: name});
   };
-
   closePopup = () => {
     this.setState({popup: ''});
   };
-
-  loadUser(userId) {
-    let user = null;
-    get(`/UserAccounts/${ userId }`)
-      .then(userInfo => user = userInfo)
-      .then(() => get(`/Teams/${ user.teamId }?filter[include]=sprints&filter[include]=columns`))
-      .then(team => {
-        let currentSprint = team.sprints.length > 0 ? team.sprints[team.sprints.length - 1].number : 0;
-        this.setState({user, team, currentSprint, dataLoaded: true});
-      })
-      .catch(error => {
-        console.error('Error fetching user and team');
-      });
-  }
-
+  loadStories = sprintId => {
+    return get(`/Sprints/${sprintId}/Stories?filter[order]=number%20ASC`)
+      .then(stories => this.setState({stories}));
+  };
+  loadTeam = teamId => {
+    return get(`/Teams/${teamId}`)
+      .then(team => this.setState({team}));
+  };
+  loadSprints = teamId => {
+    return get(`/Teams/${teamId}/Sprints?filter[order]=number%20ASC`)
+      .then(sprints => this.setState({sprints}));
+  };
+  loadColumns = teamId => {
+    return get(`/Teams/${teamId}/Columns?filter[order]=order%20ASC`)
+      .then(columns => this.setState({columns}));
+  };
+  loadUser = userId => {
+    return get(`/UserAccounts/${userId}`)
+      .then(user => this.setState({user}));
+  };
   newSprint = () => {
+    let nextSprintNum = this.state.team.sprints.length + 1;
+
     post(`/Teams/${this.state.team.id}/Sprints`, {
-      body: {number: "2"}
+      body: {number: nextSprintNum}
     }).then(sprint => {
       let team = this.state.team;
+      sprint.stories = [];
       team.sprints.push(sprint);
       this.setState({
         team,
-        currentSprint: sprint.number,
+        currentSprintIndex: team.sprints.length - 1,
         popup: '',
         snackbar: `Sprint #${sprint.number} created`,
         menuOpen: false,
       });
     });
   };
+  onNewStory = story => {
+
+  };
+
+  componentDidMount() {
+    this.loadUser(this.props.userId)
+      .then(() => this.loadTeam(this.state.user.teamId))
+      .then(() => {
+        return Promise.all(
+          [
+            this.loadColumns(this.state.team.id),
+            this.loadSprints(this.state.team.id)
+          ]
+        )
+      })
+      .then(() => {
+        let currentSprintIndex = this.state.sprints.length - 1;
+        if (currentSprintIndex > -1) {
+          this.setState({currentSprintIndex});
+          return this.loadStories(this.state.sprints[currentSprintIndex].id);
+        }
+      })
+      .then(() => this.setState({dataLoaded: true}))
+      .catch(error => {
+        console.error('error loading app', error);
+      });
+  }
 
   getNextStoryNumber() {
     let {sprints} = this.state.team;
@@ -129,16 +169,18 @@ class HomePage extends React.Component {
       switch (this.state.popup) {
         case 'newStory':
           return (
-              <NewStoryDialog
-                nextStoryNumber={this.getNextStoryNumber()}
-                onClose={this.closePopup}
-              />
+            <NewStoryDialog
+              sprint={this.state.sprints[this.state.currentSprintIndex]}
+              nextStoryNumber={this.getNextStoryNumber()}
+              onClose={this.closePopup}
+              onNewStory={this.onNewStory}
+            />
           );
         case 'sprints':
           return (
             <ManageSprintsDialog
-              currentSprint={this.state.currentSprint}
-              sprints={this.state.team.sprints}
+              currentSprintIndex={this.state.currentSprintIndex}
+              sprints={this.state.sprints}
               onClose={this.closePopup}
               onNewSprintButton={this.newSprint}
               onSprintSelected={this.onSprintSelected}
@@ -148,17 +190,19 @@ class HomePage extends React.Component {
           return (
             <ManageColumns
               onClose={this.closePopup}
-              onDone={this.closePopup}
+              onDone={this.onColumnsChanged}
               team={this.state.team}
+              columns={this.state.columns}
             />
           );
-        default: break;
+        default:
+          break;
       }
     }
   }
 
   snackbars() {
-    if(this.state.snackbar) {
+    if (this.state.snackbar) {
       return (
         <Snackbar
           anchorOrigin={{
@@ -198,7 +242,11 @@ class HomePage extends React.Component {
             <LeftMenu onMenuItem={this.openPopup}/>
           </ClickAwayListener>
         </Drawer>
-        <Header team={this.state.team} sprint={this.state.currentSprint} onMenuButton={this.onMenuButton}/>
+        <Header
+          team={this.state.team}
+          sprints={this.state.sprints}
+          sprintIndex={this.state.currentSprintIndex}
+          onMenuButton={this.onMenuButton}/>
       </div>
     );
   }

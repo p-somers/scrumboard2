@@ -8,7 +8,7 @@ import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Button from "@material-ui/core/Button/Button";
 import DraggableList from "../../generic/DraggableList";
 import AddIcon from "@material-ui/icons/Add";
-import EditableListItem from "./EditableListItem";
+import EditableListItem from "../../generic/EditableListItem";
 
 import {put, post} from "../../../request.js";
 
@@ -18,7 +18,7 @@ const styles = theme => ({});
 
 class ManageColumns extends React.Component {
   state = {
-    columns: this.props.team.columns || []
+    columns: this.props.columns || []
   };
 
   onDoneButton = () => {
@@ -32,9 +32,8 @@ class ManageColumns extends React.Component {
         return post(url, {body: columnObj});
       }
     })).then(() => {
-      console.log(arguments);
+      this.props.onDone();
     });
-    this.props.onDone();
   };
 
   onNewColumnButton = () => {

@@ -24,12 +24,6 @@ class ManageSprints extends React.Component {
     this.props.onNewSprintButton();
   };
 
-  // handleChange = name => event => {
-  //   this.setState({
-  //     [name]: event.target.value,
-  //   });
-  // };
-
   onSprintSelected = (event) => {
     this.props.onSprintSelected(event.target.value)
   };

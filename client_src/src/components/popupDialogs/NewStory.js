@@ -10,6 +10,8 @@ import Button from "@material-ui/core/Button/Button";
 import Grid from "@material-ui/core/Grid/Grid";
 import TextField from "@material-ui/core/TextField/TextField";
 
+import {post} from "../../request.js";
+
 const styles = theme => ({
   container: {
     display: 'flex',
@@ -19,18 +21,30 @@ const styles = theme => ({
 
 class NewStory extends React.Component {
   state = {
-    storyName: ''
+    newStory: {
+      name: '',
+      description: '',
+      number: '',
+      points: 0,
+      acceptanceCriteria: []
+    }
   };
 
   handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
-    });
+    let newStory = this.state.newStory;
+    newStory[name] = event.target.value;
+    this.setState({newStory});
   };
 
-  onSubmitButton() {
-
-  }
+  onSubmitButton = () => {
+    post(`/Sprints/${this.props.sprint.id}/Stories`, {
+      body: this.state.newStory
+    }).then(story => {
+      this.props.onNewStory(story);
+    }).catch(error => {
+      console.error('Error creating new story', error);
+    });
+  };
 
   onClose = () => {
     this.props.onClose();
@@ -46,8 +60,7 @@ class NewStory extends React.Component {
         className={classes.dialog}
         onClose={this.onClose}
         aria-labelledby={"new-story-dialog"}
-        open={true}
-        {...this.props}>
+        open={true}>
         <DialogTitle id={"new-story-dialog"}>New Story</DialogTitle>
         <DialogContent>
           <Grid container spacing={24}>
@@ -60,12 +73,21 @@ class NewStory extends React.Component {
                 onChange={this.handleChange('number')}
               />
             </Grid>
-            <Grid item xs={11}>
+            <Grid item xs={10}>
               <TextField
                 fullWidth={true}
-                label="Title"
+                label="Name"
                 className={classes.textField}
-                onChange={this.handleChange('title')}
+                onChange={this.handleChange('name')}
+              />
+            </Grid>
+            <Grid item xs={1}>
+              <TextField
+                fullWidth={true}
+                label="Points"
+                defaultValue={0}
+                className={classes.textField}
+                onChange={this.handleChange('points')}
               />
             </Grid>
             <Grid item xs={12}>

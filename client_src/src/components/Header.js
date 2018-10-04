@@ -28,7 +28,8 @@ class Header extends React.Component {
   };
 
   render() {
-    let {classes} = this.props;
+    let {classes, team, sprints, sprintIndex} = this.props;
+    let sprintNum = sprintIndex > -1 ? sprints[sprintIndex].number : '';
 
     return (<AppBar
       position="static"
@@ -43,7 +44,7 @@ class Header extends React.Component {
           <MenuIcon/>
         </IconButton>
         <Typography variant="title" color="inherit" className={classes.flex}>
-          {this.props.team.name} - Sprint #{this.props.sprint}
+          {team.name} - Sprint #{sprintNum}
         </Typography>
       </Toolbar>
     </AppBar>);
