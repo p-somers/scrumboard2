@@ -1,20 +1,21 @@
 'use strict';
 
-var loopback = require('loopback');
-var boot = require('loopback-boot');
+let loopback = require('loopback');
+let boot = require('loopback-boot');
+let cookieParser = require('socket.io-cookie');
+let parser = require('cookie-parser');
+let {cookieSecret} = require('./config');
 
-var app = module.exports = loopback();
+let app = module.exports = loopback();
 app.use(loopback.token({ model: app.models.accessToken }));
-// app.use(bodyParser.json()); // for parsing application/json
-// app.use(bodyParser.urlencoded({ extended: true }));
 
 app.start = function() {
   return app.listen(function() {
     app.emit('started');
-    var baseUrl = app.get('url').replace(/\/$/, '');
+    let baseUrl = app.get('url').replace(/\/$/, '');
     console.log('Web server listening at: %s', baseUrl);
     if (app.get('loopback-component-explorer')) {
-      var explorerPath = app.get('loopback-component-explorer').mountPath;
+      let explorerPath = app.get('loopback-component-explorer').mountPath;
       console.log('Browse your REST API at %s%s', baseUrl, explorerPath);
     }
   });
@@ -26,6 +27,36 @@ boot(app, __dirname, function(err) {
   if (err) throw err;
 
   // start the server if `$ node server.js`
-  if (require.main === module)
-    app.start();
+  if (require.main === module) {
+    app.io = require('socket.io')(app.start());
+    app.io.use(cookieParser);
+    require('socketio-auth')(app.io, {
+      authenticate: function (socket, value, callback) {
+
+        let AccessToken = app.models.AccessToken;
+        let test = parser.signedCookie(socket.handshake.headers.cookie.access_token, cookieSecret);
+        //get credentials sent by the client
+        let token = AccessToken.find({
+          where: {
+            and: [{userId: value.userId}, {id: test}]
+          }
+        }, function (err, tokenDetail) {
+          if (err) throw err;
+          if (tokenDetail.length) {
+            callback(null, true);
+          } else {
+            callback(null, false);
+          }
+        }); //find function..
+      } //authenticate function..
+    });
+
+    app.io.on('connection', function (socket) {
+      console.log('a user connected');
+      setTimeout(() => socket.emit('test', 'data'), 5000);
+      socket.on('disconnect', function (reason) {
+        console.log('user disconnected, reason:', reason);
+      });
+    });
+  }
 });

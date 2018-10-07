@@ -15,6 +15,8 @@ import ManageSprintsDialog from "./components/popupDialogs/ManageSprints";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 import ManageColumns from "./components/popupDialogs/manageColumns/ManageColumns";
 
+import getSocket from './socketListener';
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -129,6 +131,9 @@ class HomePage extends React.Component {
   };
 
   componentDidMount() {
+    let socket = getSocket();
+    socket.on('test', () => console.log('test event called'));
+
     this.loadUser(this.props.userId)
       .then(() => this.loadTeam(this.state.user.teamId))
       .then(() => {
