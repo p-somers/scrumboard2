@@ -22,7 +22,14 @@ class ManageColumns extends React.Component {
   };
 
   onDoneButton = () => {
-    Promise.all(this.state.columns.map((column, index) => {
+    let url = `/Teams/${this.props.team.id}/saveColumns`;
+    let {columns} = this.state;
+    post(url, {
+      body: {columns}
+    }).then(() => {
+      this.props.onDone();
+    });
+    /*Promise.all(this.state.columns.map((column, index) => {
       let columnObj = {...column};
       let url = `/Teams/${this.props.team.id}/columns`;
       columnObj.order = index;
@@ -33,7 +40,7 @@ class ManageColumns extends React.Component {
       }
     })).then(() => {
       this.props.onDone();
-    });
+    });*/
   };
 
   onNewColumnButton = () => {

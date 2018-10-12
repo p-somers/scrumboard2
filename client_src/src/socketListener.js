@@ -7,7 +7,6 @@ class Socket {
       this.io.emit('authentication', {userId: localStorage.getItem('userId')});
       this.io.on('authenticated', () => {
         // use the socket as usual
-        console.log('User is authenticated');
       });
     });
   };

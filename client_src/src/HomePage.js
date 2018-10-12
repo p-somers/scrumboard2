@@ -16,6 +16,9 @@ import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 import ManageColumns from "./components/popupDialogs/manageColumns/ManageColumns";
 
 import getSocket from './socketListener';
+import Board from "./components/Board";
+
+import './HomePage.css';
 
 const styles = theme => ({
   root: {
@@ -40,12 +43,12 @@ const styles = theme => ({
 
 class HomePage extends React.Component {
   state = {
-    currentSprintIndex: -1,
-    user: {},
-    team: {},
-    sprints: [],
-    columns: [],
-    stories: [],
+    currentSprintIndex: this.props.currentSprintIndex || -1,
+    user: this.props.user || {},
+    team: this.props.team || {},
+    sprints: this.props.sprints || [],
+    columns: this.props.columns || [],
+    stories: this.props.stories || [],
     dataLoaded: false,
     menuOpen: false,
     popup: '',
@@ -71,6 +74,7 @@ class HomePage extends React.Component {
     this.setState({snackbar: ''});
   };
   onColumnsChanged = () => {
+    // TODO: more. MORE.
     this.closePopup();
     this.loadColumns(this.state.team.id);
   };
@@ -132,7 +136,7 @@ class HomePage extends React.Component {
 
   componentDidMount() {
     let socket = getSocket();
-    socket.on('test', () => console.log('test event called'));
+    socket.on('columns updated', (err, columns) => this.setState({columns}));
 
     this.loadUser(this.props.userId)
       .then(() => this.loadTeam(this.state.user.teamId))
@@ -228,7 +232,7 @@ class HomePage extends React.Component {
   render() {
     let {classes} = this.props;
     return (
-      <div className={classes.root}>
+      <div className={classes.root} id="scrumboardRoot">
         {this.popups()}
         {this.snackbars()}
         <Drawer
@@ -252,6 +256,8 @@ class HomePage extends React.Component {
           sprints={this.state.sprints}
           sprintIndex={this.state.currentSprintIndex}
           onMenuButton={this.onMenuButton}/>
+        <Board
+          />
       </div>
     );
   }

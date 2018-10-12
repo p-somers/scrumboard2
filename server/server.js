@@ -9,6 +9,11 @@ let {cookieSecret} = require('./config');
 let app = module.exports = loopback();
 app.use(loopback.token({ model: app.models.accessToken }));
 
+app.use(function (req, res, next){
+  app.set('socketId', req.cookies.io);
+  next();
+});
+
 app.start = function() {
   return app.listen(function() {
     app.emit('started');
@@ -34,11 +39,11 @@ boot(app, __dirname, function(err) {
       authenticate: function (socket, value, callback) {
 
         let AccessToken = app.models.AccessToken;
-        let test = parser.signedCookie(socket.handshake.headers.cookie.access_token, cookieSecret);
+        let tokenId = parser.signedCookie(socket.handshake.headers.cookie.access_token, cookieSecret);
         //get credentials sent by the client
-        let token = AccessToken.find({
+        AccessToken.find({
           where: {
-            and: [{userId: value.userId}, {id: test}]
+            and: [{userId: value.userId}, {id: tokenId}]
           }
         }, function (err, tokenDetail) {
           if (err) throw err;
@@ -52,8 +57,7 @@ boot(app, __dirname, function(err) {
     });
 
     app.io.on('connection', function (socket) {
-      console.log('a user connected');
-      setTimeout(() => socket.emit('test', 'data'), 5000);
+      console.log('a user connected', socket.id);
       socket.on('disconnect', function (reason) {
         console.log('user disconnected, reason:', reason);
       });

@@ -1,6 +1,20 @@
 'use strict';
 
 module.exports = function(Column) {
+  let app;
+
+  Column.on('attached', function(a) {
+    app = a;
+  });
+
+  // Column.observe('after save', ctx => {
+  //   let socket = app.io.sockets.connected[app.get('socketId')];
+  //   socket && socket.broadcast.emit('column updated', ctx.instance);
+  // });
+  //
+  // Column.observe('after delete', ctx => {
+  //
+  // });
 
   /**
    * Promise-ified version of create
