@@ -1,6 +1,7 @@
-.boardWrapper {
+#boardWrapper {
   display: flex;
   flex-direction: row;
   width: 100%;
   flex: 1;
+  padding: 15px;
 }

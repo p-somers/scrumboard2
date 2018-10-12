@@ -257,6 +257,7 @@ class HomePage extends React.Component {
           sprintIndex={this.state.currentSprintIndex}
           onMenuButton={this.onMenuButton}/>
         <Board
+          columns={this.state.columns}
           />
       </div>
     );

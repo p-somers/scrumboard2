@@ -29,18 +29,6 @@ class ManageColumns extends React.Component {
     }).then(() => {
       this.props.onDone();
     });
-    /*Promise.all(this.state.columns.map((column, index) => {
-      let columnObj = {...column};
-      let url = `/Teams/${this.props.team.id}/columns`;
-      columnObj.order = index;
-      if (column.id) { // update if not new
-        return put(url + `/${column.id}`, {body: columnObj});
-      } else { // otherwise create
-        return post(url, {body: columnObj});
-      }
-    })).then(() => {
-      this.props.onDone();
-    });*/
   };
 
   onNewColumnButton = () => {
