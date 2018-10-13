@@ -10,7 +10,7 @@ export default class DraggableList extends React.Component {
     if (destination) {
       let locationDidChange = source.droppableId !== destination.droppableId || source.index !== destination.index;
       if (locationDidChange) {
-        this.props.onItemMoved(source.index, destination.index);
+        this.props.onItemMoved(source.index, destination.index, source.droppableId, destination.droppableId);
       }
     }
   };

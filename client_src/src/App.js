@@ -3,7 +3,7 @@ import './App.css';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
-import HomePage from './HomePage';
+import HomePageDataManager from './components/HomePageDataManager';
 import LoginPage from './Login/LoginPage';
 
 const theme = createMuiTheme({
@@ -65,7 +65,7 @@ class App extends Component {
         >
         <CssBaseline/>
         { this.state.userId ?
-          (<HomePage userId={ this.state.userId }/>) :
+          (<HomePageDataManager userId={ this.state.userId }/>) :
           (<LoginPage
             onLogin={ this.setUserFromToken }
           />) }

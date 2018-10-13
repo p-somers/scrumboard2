@@ -7,16 +7,15 @@ import Drawer from "@material-ui/core/Drawer/Drawer";
 import Divider from "@material-ui/core/Divider/Divider";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener/ClickAwayListener";
 
-import {get, post} from './request';
-import Header from './components/Header';
-import LeftMenu from "./components/menu/LeftMenu";
-import NewStoryDialog from "./components/popupDialogs/NewStory";
-import ManageSprintsDialog from "./components/popupDialogs/ManageSprints";
+import {post} from '../request';
+import Header from './Header';
+import LeftMenu from "./menu/LeftMenu";
+import NewStoryDialog from "./popupDialogs/NewStory";
+import ManageSprintsDialog from "./popupDialogs/ManageSprints";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
-import ManageColumns from "./components/popupDialogs/manageColumns/ManageColumns";
+import ManageColumns from "./popupDialogs/manageColumns/ManageColumns";
 
-import getSocket from './socketListener';
-import Board from "./components/Board";
+import Board from "./Board";
 
 import './HomePage.css';
 
@@ -43,13 +42,7 @@ const styles = theme => ({
 
 class HomePage extends React.Component {
   state = {
-    currentSprintIndex: this.props.currentSprintIndex || -1,
-    user: this.props.user || {},
-    team: this.props.team || {},
-    sprints: this.props.sprints || [],
-    columns: this.props.columns || [],
-    stories: this.props.stories || [],
-    dataLoaded: false,
+    currentSprintIndex: this.props.sprints.length - 1,
     menuOpen: false,
     popup: '',
     snackbar: ''
@@ -83,7 +76,7 @@ class HomePage extends React.Component {
       currentSprintIndex,
       popup: '',
       menuOpen: false,
-      snackbar: `Sprint #${currentSprintIndex} loaded`
+      snackbar: `Sprint #${currentSprintIndex + 1} loaded`
     })
   };
   openPopup = name => {
@@ -92,35 +85,15 @@ class HomePage extends React.Component {
   closePopup = () => {
     this.setState({popup: ''});
   };
-  loadStories = sprintId => {
-    return get(`/Sprints/${sprintId}/Stories?filter[order]=number%20ASC`)
-      .then(stories => this.setState({stories}));
-  };
-  loadTeam = teamId => {
-    return get(`/Teams/${teamId}`)
-      .then(team => this.setState({team}));
-  };
-  loadSprints = teamId => {
-    return get(`/Teams/${teamId}/Sprints?filter[order]=number%20ASC`)
-      .then(sprints => this.setState({sprints}));
-  };
-  loadColumns = teamId => {
-    return get(`/Teams/${teamId}/Columns?filter[order]=order%20ASC`)
-      .then(columns => this.setState({columns}));
-  };
-  loadUser = userId => {
-    return get(`/UserAccounts/${userId}`)
-      .then(user => this.setState({user}));
-  };
   newSprint = () => {
-    let nextSprintNum = this.state.team.sprints.length + 1;
+    let {team, sprints} = this.props;
+    let nextSprintNum = sprints.length + 1;
 
-    post(`/Teams/${this.state.team.id}/Sprints`, {
+    post(`/Teams/${team.id}/Sprints`, {
       body: {number: nextSprintNum}
     }).then(sprint => {
-      let team = this.state.team;
       sprint.stories = [];
-      team.sprints.push(sprint);
+      sprints.push(sprint);
       this.setState({
         team,
         currentSprintIndex: team.sprints.length - 1,
@@ -133,34 +106,6 @@ class HomePage extends React.Component {
   onNewStory = story => {
 
   };
-
-  componentDidMount() {
-    let socket = getSocket();
-    socket.on('columns updated', (err, columns) => this.setState({columns}));
-
-    this.loadUser(this.props.userId)
-      .then(() => this.loadTeam(this.state.user.teamId))
-      .then(() => {
-        return Promise.all(
-          [
-            this.loadColumns(this.state.team.id),
-            this.loadSprints(this.state.team.id)
-          ]
-        )
-      })
-      .then(() => {
-        let currentSprintIndex = this.state.sprints.length - 1;
-        if (currentSprintIndex > -1) {
-          this.setState({currentSprintIndex});
-          return this.loadStories(this.state.sprints[currentSprintIndex].id);
-        }
-      })
-      .then(() => this.setState({dataLoaded: true}))
-      .catch(error => {
-        console.error('error loading app', error);
-      });
-  }
-
   getNextStoryNumber() {
     let {sprints} = this.state.team;
     let storyNum = 1;
@@ -174,39 +119,39 @@ class HomePage extends React.Component {
   }
 
   popups() {
-    if (this.state.dataLoaded) {
-      switch (this.state.popup) {
-        case 'newStory':
-          return (
-            <NewStoryDialog
-              sprint={this.state.sprints[this.state.currentSprintIndex]}
-              nextStoryNumber={this.getNextStoryNumber()}
-              onClose={this.closePopup}
-              onNewStory={this.onNewStory}
-            />
-          );
-        case 'sprints':
-          return (
-            <ManageSprintsDialog
-              currentSprintIndex={this.state.currentSprintIndex}
-              sprints={this.state.sprints}
-              onClose={this.closePopup}
-              onNewSprintButton={this.newSprint}
-              onSprintSelected={this.onSprintSelected}
-            />
-          );
-        case 'columns':
-          return (
-            <ManageColumns
-              onClose={this.closePopup}
-              onDone={this.onColumnsChanged}
-              team={this.state.team}
-              columns={this.state.columns}
-            />
-          );
-        default:
-          break;
-      }
+    let {sprints, team, columns} = this.props;
+
+    switch (this.state.popup) {
+      case 'newStory':
+        return (
+          <NewStoryDialog
+            sprint={sprints[this.state.currentSprintIndex]}
+            nextStoryNumber={this.getNextStoryNumber()}
+            onClose={this.closePopup}
+            onNewStory={this.onNewStory}
+          />
+        );
+      case 'sprints':
+        return (
+          <ManageSprintsDialog
+            currentSprintIndex={this.state.currentSprintIndex}
+            sprints={sprints}
+            onClose={this.closePopup}
+            onNewSprintButton={this.newSprint}
+            onSprintSelected={this.onSprintSelected}
+          />
+        );
+      case 'columns':
+        return (
+          <ManageColumns
+            onClose={this.closePopup}
+            onDone={this.onColumnsChanged}
+            team={team}
+            columns={columns}
+          />
+        );
+      default:
+        break;
     }
   }
 
@@ -230,7 +175,7 @@ class HomePage extends React.Component {
   }
 
   render() {
-    let {classes} = this.props;
+    let {classes, team, sprints, columns} = this.props;
     return (
       <div className={classes.root} id="scrumboardRoot">
         {this.popups()}
@@ -252,12 +197,12 @@ class HomePage extends React.Component {
           </ClickAwayListener>
         </Drawer>
         <Header
-          team={this.state.team}
-          sprints={this.state.sprints}
+          team={team}
+          sprints={sprints}
           sprintIndex={this.state.currentSprintIndex}
           onMenuButton={this.onMenuButton}/>
         <Board
-          columns={this.state.columns}
+          columns={columns}
           />
       </div>
     );

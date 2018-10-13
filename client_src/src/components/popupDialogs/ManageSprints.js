@@ -25,7 +25,7 @@ class ManageSprints extends React.Component {
   };
 
   onSprintSelected = (event) => {
-    this.props.onSprintSelected(event.target.value)
+    this.props.onSprintSelected(event.target.value - 1)
   };
 
   onClose = () => {
