@@ -16,7 +16,7 @@ class ManageSprints extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      sprint: this.props.currentSprint || 0
+      sprint: this.props.currentSprintIndex + 1 || 0
     };
   }
 

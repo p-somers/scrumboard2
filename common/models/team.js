@@ -12,7 +12,7 @@ module.exports = function (Team) {
   });
 
   Team.saveColumns = (teamId, columns, callback) => {
-    let Column = app.models.Column;
+    let {Column} = app.models;
 
     let newColumns = [];
     let updatedColumns = [];
@@ -35,8 +35,25 @@ module.exports = function (Team) {
 
     Promise.all(operations).then(columns => {
       let socket = app.io.sockets.connected[app.get('socketId')];
-      socket && socket.broadcast.emit('columns updated', columns);
+      socket && socket.emit('columns updated', columns);
       callback(null, columns);
+    });
+  };
+
+  Team.nextStoryNumber = (teamId, callback) => {
+    let {Story, Sprint} = app.models;
+    Sprint.find({where: {teamId}}, (sprintFindError, sprints) => {
+      Story.findOne(
+        {
+          where: {sprintId: {inq: sprints.map(sprint => sprint.id)}},
+          order: 'number DESC'
+        },
+        (err, story) => {
+          let number = 1;
+          if (story && !isNaN(story.number)) number = story.number + 1;
+          callback(null, number);
+        }
+      );
     });
   };
 
@@ -47,6 +64,14 @@ module.exports = function (Team) {
     ],
     returns: {arg: 'columns', type: 'array'},
     http: {path: '/:id/saveColumns', method: 'post'}
+  });
+
+  Team.remoteMethod('nextStoryNumber', {
+    accepts: [
+      {arg: 'id', type: 'string', required: true},
+    ],
+    returns: {arg: 'number', type: 'number'},
+    http: {path: '/:id/nextStoryNumber', method: 'get'}
   });
 
   Team.afterRemote('create', (ctx, team, next) => {

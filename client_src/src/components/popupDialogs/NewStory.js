@@ -10,7 +10,7 @@ import Button from "@material-ui/core/Button/Button";
 import Grid from "@material-ui/core/Grid/Grid";
 import TextField from "@material-ui/core/TextField/TextField";
 
-import {post} from "../../request.js";
+import {post, get} from "../../request.js";
 
 const styles = theme => ({
   container: {
@@ -27,8 +27,19 @@ class NewStory extends React.Component {
       number: '',
       points: 0,
       acceptanceCriteria: []
-    }
+    },
+    loading: true
   };
+
+  componentDidMount() {
+    let {team} = this.props;
+    let {newStory} = this.state;
+    get(`/Teams/${team.id}/nextStoryNumber`).then(response => {
+        newStory.number = response.number;
+        this.setState({newStory, loading:false});
+      }
+    );
+  }
 
   handleChange = name => event => {
     let newStory = this.state.newStory;
@@ -51,10 +62,13 @@ class NewStory extends React.Component {
   };
 
   render() {
-    let {classes, nextStoryNumber} = this.props;
+    let {classes} = this.props;
+    let {newStory, loading} = this.state;
 
-    return (
-      <Dialog
+    if (loading) {
+      return <div className="loading"/>
+    } else {
+      return <Dialog
         maxWidth={'md'}
         fullWidth={true}
         className={classes.dialog}
@@ -68,7 +82,7 @@ class NewStory extends React.Component {
               <TextField
                 fullWidth={true}
                 label="#"
-                defaultValue={nextStoryNumber}
+                defaultValue={newStory.number}
                 className={classes.textField}
                 onChange={this.handleChange('number')}
               />
@@ -111,7 +125,7 @@ class NewStory extends React.Component {
           </Button>
         </DialogActions>
       </Dialog>
-    )
+    }
   }
 }
 

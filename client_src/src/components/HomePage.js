@@ -68,8 +68,8 @@ class HomePage extends React.Component {
   };
   onColumnsChanged = () => {
     // TODO: more. MORE.
+    // ...maybe, anyway
     this.closePopup();
-    this.loadColumns(this.state.team.id);
   };
   onSprintSelected = currentSprintIndex => {
     this.setState({
@@ -96,7 +96,7 @@ class HomePage extends React.Component {
       sprints.push(sprint);
       this.setState({
         team,
-        currentSprintIndex: team.sprints.length - 1,
+        currentSprintIndex: sprints.length - 1,
         popup: '',
         snackbar: `Sprint #${sprint.number} created`,
         menuOpen: false,
@@ -104,19 +104,11 @@ class HomePage extends React.Component {
     });
   };
   onNewStory = story => {
-
+    this.closePopup();
+    this.setState({
+      snackbar: `Story #${story.number} created`
+    });
   };
-  getNextStoryNumber() {
-    let {sprints} = this.state.team;
-    let storyNum = 1;
-    if (sprints.length > 0) {
-      let {stories} = sprints[sprints.length - 1];
-      if (stories.length > 0) {
-        storyNum = stories[stories.length - 1].number + 1;
-      }
-    }
-    return storyNum;
-  }
 
   popups() {
     let {sprints, team, columns} = this.props;
@@ -126,7 +118,7 @@ class HomePage extends React.Component {
         return (
           <NewStoryDialog
             sprint={sprints[this.state.currentSprintIndex]}
-            nextStoryNumber={this.getNextStoryNumber()}
+            team={team}
             onClose={this.closePopup}
             onNewStory={this.onNewStory}
           />

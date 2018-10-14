@@ -56,11 +56,11 @@ boot(app, __dirname, function(err) {
       } //authenticate function..
     });
 
-    app.io.on('connection', function (socket) {
-      console.log('a user connected', socket.id);
-      socket.on('disconnect', function (reason) {
-        console.log('user disconnected, reason:', reason);
-      });
-    });
+    // app.io.on('connection', function (socket) {
+    //   console.log('a user connected', socket.id);
+    //   socket.on('disconnect', function (reason) {
+    //     console.log('user disconnected, reason:', reason);
+    //   });
+    // });
   }
 });

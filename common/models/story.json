@@ -22,6 +22,10 @@
         "string"
       ],
       "required": false
+    },
+    "number": {
+      "type": "number",
+      "required": true
     }
   },
   "validations": [],

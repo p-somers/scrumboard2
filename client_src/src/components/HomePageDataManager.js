@@ -62,12 +62,13 @@ class HomePageDataManager extends React.Component {
 
   render () {
     if (this.state.loading) {
-      return <div>loading...</div>;
+      return <div className="loading"/>;
     } else {
       return <HomePage
         team={this.state.team}
         columns={this.state.columns}
         sprints={this.state.sprints}
+        stories={this.state.stories}
       />;
     }
   }
