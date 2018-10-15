@@ -77,7 +77,8 @@ class HomePage extends React.Component {
       popup: '',
       menuOpen: false,
       snackbar: `Sprint #${currentSprintIndex + 1} loaded`
-    })
+    });
+    this.props.onSprintSelected(this.props.sprints[currentSprintIndex].id);
   };
   openPopup = name => {
     this.setState({popup: name});
@@ -167,7 +168,7 @@ class HomePage extends React.Component {
   }
 
   render() {
-    let {classes, team, sprints, columns} = this.props;
+    let {classes, team, sprints, stories, tasks, columns} = this.props;
     return (
       <div className={classes.root} id="scrumboardRoot">
         {this.popups()}
@@ -194,6 +195,7 @@ class HomePage extends React.Component {
           sprintIndex={this.state.currentSprintIndex}
           onMenuButton={this.onMenuButton}/>
         <Board
+          stories={stories}
           columns={columns}
           />
       </div>

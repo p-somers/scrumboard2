@@ -40,7 +40,7 @@ class HomePageDataManager extends React.Component {
   }
 
   loadStories = sprintId => {
-    return get(`/Sprints/${sprintId}/Stories?filter[order]=number%20ASC`)
+    return get(`/Sprints/${sprintId}/Stories?filter[order]=number%20ASC&filter[include]=tasks`)
       .then(stories => this.setState({stories}));
   };
   loadTeam = teamId => {
@@ -69,6 +69,7 @@ class HomePageDataManager extends React.Component {
         columns={this.state.columns}
         sprints={this.state.sprints}
         stories={this.state.stories}
+        onSprintSelected={this.loadStories}
       />;
     }
   }

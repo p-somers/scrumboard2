@@ -5,3 +5,7 @@
   flex: 1;
   padding: 15px;
 }
+
+.storiesColumn {
+  flex: .5;
+}
