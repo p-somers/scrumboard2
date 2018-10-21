@@ -1,7 +1,7 @@
-DialogActions {
+ManageColumns DialogActions {
   display: flex;
 }
 
-.spacer {
+ManageColumns DialogActions .spacer {
   flex: 1;
 }

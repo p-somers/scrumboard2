@@ -8,10 +8,22 @@ class Board extends React.Component {
 
   render() {
     return <div id="boardWrapper">
-      <div className="storiesColumn">
-
-      </div>
-      {this.props.columns.map((column, index) => (<Column key={index} column={column}/>))}
+      <Column key={0} column={{title: ''}} className={"storyInfo"}/>
+      {this.props.columns.map(
+        (column, index) =>
+          <Column
+            key={index + 1}
+            column={column}
+            storyTasks={
+              this.props.stories.map(story => {
+                  let storyCopy = {...story};
+                  storyCopy.tasks = storyCopy.tasks.filter(task => task.columnId = column.id);
+                  return storyCopy;
+                }
+              )
+            }
+          />
+      )}
     </div>;
   }
 }
