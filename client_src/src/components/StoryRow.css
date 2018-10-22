@@ -1,0 +1,15 @@
+.storyRow {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+}
+
+.storyRow .storyTitle {
+  width: 150px;
+  text-align: right;
+}
+
+.storyRow .storyColumn {
+  flex: 1;
+}

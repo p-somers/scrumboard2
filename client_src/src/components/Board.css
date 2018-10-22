@@ -1,53 +1,25 @@
 #boardWrapper {
   display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 15px;
+}
+
+#boardWrapper .header {
+  display: flex;
   flex-direction: row;
+  width: 100%;
 }
 
-#boardWrapper .storyInfo {
-  width: 100px;
+#boardWrapper .header .spacer {
+  width: 150px;
 }
 
-/*#boardWrapper {*/
-  /*display: flex;*/
-  /*flex-direction: column;*/
-  /*width: 100%;*/
-  /*flex: 1;*/
-  /*padding: 20px;*/
-  /*--name-column-width: 50px;*/
-/*}*/
+#boardWrapper .header .title {
+  flex: 1;
+  text-align: center;
+}
 
-/*#boardWrapper .headers {*/
-  /*width: 100%;*/
-  /*display: flex;*/
-  /*flex-direction: row;*/
-/*}*/
-
-/*#boardWrapper .headers .spacer {*/
-  /*width: var(--name-column-width);*/
-/*}*/
-
-/*#boardWrapper .headers .columnHeader {*/
-  /*flex: 1;*/
-  /*text-align: center;*/
-/*}*/
-
-/*#boardWrapper .headers .columnHeader span {*/
-  /*margin-left: auto;*/
-  /*margin-right: auto;*/
-/*}*/
-
-/*.storiesColumn {*/
-  /*flex: .5;*/
-  /*display: flex;*/
-  /*flex-direction: column;*/
-  /*height: 100%;*/
-/*}*/
-
-/*.storiesColumn div {*/
-  /*flex: 1*/
-/*}*/
-
-/*#boardWrapper .storyRow,*/
-/*#boardWrapper .headers {*/
-  /*border-bottom: solid 1px black;*/
-/*}*/
+#boardWrapper .header .title span {
+  display: inline-block;
+}
