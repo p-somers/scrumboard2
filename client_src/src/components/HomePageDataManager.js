@@ -13,51 +13,51 @@ class HomePageDataManager extends React.Component {
     loading: true
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     let socket = getSocket();
     socket.on('columns updated', (err, columns) => this.setState({columns}));
-    this.loadUser(this.props.userId)
-      .then(() => this.loadTeam(this.state.user.teamId))
-      .then(() => {
-        return Promise.all(
-          [
-            this.loadColumns(this.state.team.id),
-            this.loadSprints(this.state.team.id)
-          ]
-        )
-      })
-      .then(() => {
-        let currentSprintIndex = this.state.sprints.length - 1;
-        if (currentSprintIndex > -1) {
-          this.setState({currentSprintIndex});
-          return this.loadStories(this.state.sprints[currentSprintIndex].id);
-        }
-      })
-      .then(() => this.setState({loading: false}))
-      .catch(error => {
-        console.error('error loading app', error);
-      });
+    try {
+      await this.loadUser(this.props.userId);
+      await this.loadTeam(this.state.user.teamId);
+      await Promise.all(
+        [
+          this.loadColumns(this.state.team.id),
+          this.loadSprints(this.state.team.id)
+        ]
+      );
+      let currentSprintIndex = this.state.sprints.length - 1;
+      if (currentSprintIndex > -1) {
+        this.setState({currentSprintIndex});
+        await this.loadStories(this.state.sprints[currentSprintIndex].id);
+      }
+      this.setState({loading: false});
+    } catch({error}) {
+      switch (error.statusCode) {
+        case 401: localStorage.removeItem("userId"); break;
+        case undefined: console.error('error loading app', error); break;
+      }
+    }
   }
 
-  loadStories = sprintId => {
-    return get(`/Sprints/${sprintId}/Stories?filter[order]=number%20ASC&filter[include]=tasks`)
-      .then(stories => this.setState({stories}));
+  loadStories = async sprintId => {
+    const stories = await get(`/Sprints/${sprintId}/Stories?filter[order]=number%20ASC&filter[include]=tasks`)
+    await this.setState({stories});
   };
-  loadTeam = teamId => {
-    return get(`/Teams/${teamId}`)
-      .then(team => this.setState({team}));
+  loadTeam = async teamId => {
+    const team = await get(`/Teams/${teamId}`)
+    await this.setState({team});
   };
-  loadSprints = teamId => {
-    return get(`/Teams/${teamId}/Sprints?filter[order]=number%20ASC`)
-      .then(sprints => this.setState({sprints}));
+  loadSprints = async teamId => {
+    const sprints = await get(`/Teams/${teamId}/Sprints?filter[order]=number%20ASC`)
+    await this.setState({sprints});
   };
-  loadColumns = teamId => {
+  loadColumns = async teamId => {
     return get(`/Teams/${teamId}/Columns?filter[order]=order%20ASC`)
       .then(columns => this.setState({columns}));
   };
-  loadUser = userId => {
-    return get(`/UserAccounts/${userId}`)
-      .then(user => this.setState({user}));
+  loadUser = async userId => {
+    const user = await get(`/UserAccounts/${userId}`);
+    await this.setState({user});
   };
 
   render () {
