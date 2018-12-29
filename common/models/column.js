@@ -7,12 +7,12 @@ module.exports = function(Column) {
     app = a;
   });
 
-  // Column.observe('after save', ctx => {
+  // ColumnHeader.observe('after save', ctx => {
   //   let socket = app.io.sockets.connected[app.get('socketId')];
   //   socket && socket.broadcast.emit('column updated', ctx.instance);
   // });
   //
-  // Column.observe('after delete', ctx => {
+  // ColumnHeader.observe('after delete', ctx => {
   //
   // });
 

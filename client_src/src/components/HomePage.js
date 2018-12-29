@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import {withStyles} from "@material-ui/core";
-import IconButton from '@material-ui/core/IconButton';
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import { withStyles } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
 import Drawer from "@material-ui/core/Drawer/Drawer";
 import Divider from "@material-ui/core/Divider/Divider";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener/ClickAwayListener";
 
-import {post} from '../request';
-import Header from './Header';
+import { post } from "../request";
+import Header from "./Header";
 import LeftMenu from "./menu/LeftMenu";
 import NewStoryDialog from "./popupDialogs/NewStory";
 import ManageSprintsDialog from "./popupDialogs/ManageSprints";
@@ -17,54 +17,54 @@ import ManageColumns from "./popupDialogs/manageColumns/ManageColumns";
 
 import Board from "./Board";
 
-import './HomePage.css';
+import "./HomePage.css";
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   flex: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   leftMenu: {
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing.unit * 9,
-    },
+    [theme.breakpoints.up("sm")]: {
+      width: theme.spacing.unit * 9
+    }
   },
   toolbarIcon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
-    ...theme.mixins.toolbar,
-  },
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    padding: "0 8px",
+    ...theme.mixins.toolbar
+  }
 });
 
 class HomePage extends React.Component {
   state = {
     currentSprintIndex: this.props.sprints.length - 1,
     menuOpen: false,
-    popup: '',
-    snackbar: ''
+    popup: "",
+    snackbar: ""
   };
-  setState = (newState) => {
+  setState = newState => {
     // Promisifying setState
     return new Promise(resolve => {
       super.setState(newState, () => {
-        resolve()
+        resolve();
       });
     });
   };
   onMenuButton = () => {
-    this.setState({menuOpen: true});
+    this.setState({ menuOpen: true });
   };
   onMenuClose = () => {
-    if (this.state.popup === '') {
-      this.setState({menuOpen: false});
+    if (this.state.popup === "") {
+      this.setState({ menuOpen: false });
     }
   };
   onSnackbarClose = () => {
-    this.setState({snackbar: ''});
+    this.setState({ snackbar: "" });
   };
   onColumnsChanged = () => {
     // TODO: more. MORE.
@@ -74,33 +74,33 @@ class HomePage extends React.Component {
   onSprintSelected = currentSprintIndex => {
     this.setState({
       currentSprintIndex,
-      popup: '',
+      popup: "",
       menuOpen: false,
       snackbar: `Sprint #${currentSprintIndex + 1} loaded`
     });
     this.props.onSprintSelected(this.props.sprints[currentSprintIndex].id);
   };
   openPopup = name => {
-    this.setState({popup: name});
+    this.setState({ popup: name });
   };
   closePopup = () => {
-    this.setState({popup: ''});
+    this.setState({ popup: "" });
   };
   newSprint = () => {
-    let {team, sprints} = this.props;
+    let { team, sprints } = this.props;
     let nextSprintNum = sprints.length + 1;
 
     post(`/Teams/${team.id}/Sprints`, {
-      body: {number: nextSprintNum}
+      body: { number: nextSprintNum }
     }).then(sprint => {
       sprint.stories = [];
       sprints.push(sprint);
       this.setState({
         team,
         currentSprintIndex: sprints.length - 1,
-        popup: '',
+        popup: "",
         snackbar: `Sprint #${sprint.number} created`,
-        menuOpen: false,
+        menuOpen: false
       });
     });
   };
@@ -112,10 +112,10 @@ class HomePage extends React.Component {
   };
 
   popups() {
-    let {sprints, team, columns} = this.props;
+    let { sprints, team, columns } = this.props;
 
     switch (this.state.popup) {
-      case 'newStory':
+      case "newStory":
         return (
           <NewStoryDialog
             sprint={sprints[this.state.currentSprintIndex]}
@@ -124,7 +124,7 @@ class HomePage extends React.Component {
             onNewStory={this.onNewStory}
           />
         );
-      case 'sprints':
+      case "sprints":
         return (
           <ManageSprintsDialog
             currentSprintIndex={this.state.currentSprintIndex}
@@ -134,7 +134,7 @@ class HomePage extends React.Component {
             onSprintSelected={this.onSprintSelected}
           />
         );
-      case 'columns':
+      case "columns":
         return (
           <ManageColumns
             onClose={this.closePopup}
@@ -153,51 +153,50 @@ class HomePage extends React.Component {
       return (
         <Snackbar
           anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
+            vertical: "bottom",
+            horizontal: "center"
           }}
           open={true}
           autoHideDuration={2000}
           onClose={this.onSnackbarClose}
           ContentProps={{
-            'aria-describedby': 'message-id',
+            "aria-describedby": "message-id"
           }}
-          message={<span id="message-id">{this.state.snackbar}</span>}/>
-      )
+          message={<span id="message-id">{this.state.snackbar}</span>}
+        />
+      );
     }
   }
 
   render() {
-    let {classes, team, sprints, stories, tasks, columns} = this.props;
+    let { classes, team, sprints, stories, tasks, columns } = this.props;
     return (
       <div className={classes.root} id="scrumboardRoot">
         {this.popups()}
         {this.snackbars()}
         <Drawer
           classes={{
-            paper: `${classes.leftMenu}`,
+            paper: `${classes.leftMenu}`
           }}
           open={this.state.menuOpen}
         >
           <div className={classes.toolbarIcon}>
             <IconButton onClick={this.onMenuClose}>
-              <ChevronLeftIcon/>
+              <ChevronLeftIcon />
             </IconButton>
           </div>
-          <Divider/>
+          <Divider />
           <ClickAwayListener onClickAway={this.onMenuClose}>
-            <LeftMenu onMenuItem={this.openPopup}/>
+            <LeftMenu onMenuItem={this.openPopup} />
           </ClickAwayListener>
         </Drawer>
         <Header
           team={team}
           sprints={sprints}
           sprintIndex={this.state.currentSprintIndex}
-          onMenuButton={this.onMenuButton}/>
-        <Board
-          stories={stories}
-          columns={columns}
-          />
+          onMenuButton={this.onMenuButton}
+        />
+        <Board stories={stories} columns={columns} />
       </div>
     );
   }

@@ -15,11 +15,11 @@
   width: 150px;
 }
 
-#boardWrapper .header .title {
-  flex: 1;
-  text-align: center;
-}
+/*#boardWrapper .header .title {*/
+/*flex: 1;*/
+/*text-align: center;*/
+/*}*/
 
-#boardWrapper .header .title span {
-  display: inline-block;
-}
+/*#boardWrapper .header .title span {*/
+/*display: inline-block;*/
+/*}*/

@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
@@ -9,8 +9,7 @@ import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Button from "@material-ui/core/Button/Button";
 
-const styles = theme => ({
-});
+const styles = theme => ({});
 
 class ManageSprints extends React.Component {
   constructor(props) {
@@ -24,8 +23,8 @@ class ManageSprints extends React.Component {
     this.props.onNewSprintButton();
   };
 
-  onSprintSelected = (event) => {
-    this.props.onSprintSelected(event.target.value - 1)
+  onSprintSelected = event => {
+    this.props.onSprintSelected(event.target.value - 1);
   };
 
   onClose = () => {
@@ -33,19 +32,21 @@ class ManageSprints extends React.Component {
   };
 
   render() {
-    let {classes, sprints, value} = this.props;
+    let { classes, sprints, value } = this.props;
 
     return (
       <Dialog
-        maxWidth={'xs'}
+        maxWidth={"xs"}
         fullWidth={true}
         className={classes.dialog}
         onClose={this.onClose}
         aria-labelledby={"manage-sprints-dialog"}
         open={true}
         value={value}
-        >
-        <DialogTitle id={"manage-sprints-dialog"}>Manage and Select Sprints</DialogTitle>
+      >
+        <DialogTitle id={"manage-sprints-dialog"}>
+          Manage and Select Sprints
+        </DialogTitle>
         <DialogContent>
           <TextField
             fullWidth={true}
@@ -55,8 +56,8 @@ class ManageSprints extends React.Component {
             onChange={this.onSprintSelected}
             SelectProps={{
               MenuProps: {
-                className: classes.menu,
-              },
+                className: classes.menu
+              }
             }}
             margin="normal"
             value={this.state.sprint}

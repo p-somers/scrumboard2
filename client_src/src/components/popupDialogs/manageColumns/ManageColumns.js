@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
@@ -10,9 +10,9 @@ import DraggableList from "../../generic/DraggableList";
 import AddIcon from "@material-ui/icons/Add";
 import EditableListItem from "../../generic/EditableListItem";
 
-import {put, post} from "../../../request.js";
+import { put, post } from "../../../request.js";
 
-import "./ManageColumns.css"
+import "./ManageColumns.css";
 
 const styles = theme => ({});
 
@@ -23,9 +23,9 @@ class ManageColumns extends React.Component {
 
   onDoneButton = () => {
     let url = `/Teams/${this.props.team.id}/saveColumns`;
-    let {columns} = this.state;
+    let { columns } = this.state;
     post(url, {
-      body: {columns}
+      body: { columns }
     }).then(() => {
       this.props.onDone();
     });
@@ -37,13 +37,13 @@ class ManageColumns extends React.Component {
       title: "column " + (columns.length + 1), //TODO: something else
       order: columns.length
     });
-    this.setState({columns});
+    this.setState({ columns });
   };
 
   onEditColumn = index => newText => {
     let columns = this.state.columns;
     columns[index].title = newText;
-    this.setState({columns});
+    this.setState({ columns });
   };
 
   onColumnMoved = (from, to) => {
@@ -54,7 +54,7 @@ class ManageColumns extends React.Component {
     let draggedColumn = columns[from];
     columns.splice(from, 1);
     columns.splice(to, 0, draggedColumn);
-    this.setState({columns});
+    this.setState({ columns });
   };
 
   onClose = () => {
@@ -62,11 +62,11 @@ class ManageColumns extends React.Component {
   };
 
   render() {
-    let {classes, value} = this.props;
+    let { classes, value } = this.props;
 
     return (
       <Dialog
-        maxWidth={'xs'}
+        maxWidth={"xs"}
         fullWidth={true}
         className={classes.dialog}
         onClose={this.onClose}
@@ -74,19 +74,16 @@ class ManageColumns extends React.Component {
         open={true}
         value={value}
       >
-        <DialogTitle id={"manage-columns-dialog"}>
-          Manage Columns
-        </DialogTitle>
+        <DialogTitle id={"manage-columns-dialog"}>Manage Columns</DialogTitle>
         <DialogContent>
           <DraggableList onItemMoved={this.onColumnMoved}>
-            {this.state.columns.map((column, index) =>
+            {this.state.columns.map((column, index) => (
               <EditableListItem
                 key={index}
                 text={column.title}
                 onEdit={this.onEditColumn(index)}
               />
-            )
-            }
+            ))}
           </DraggableList>
         </DialogContent>
         <DialogActions>
@@ -96,10 +93,11 @@ class ManageColumns extends React.Component {
             color="secondary"
             aria-label="Add"
             onClick={this.onNewColumnButton}
-            className={classes.button}>
-            <AddIcon/>
+            className={classes.button}
+          >
+            <AddIcon />
           </Button>
-          <div className={"spacer"}/>
+          <div className={"spacer"} />
           <Button onClick={this.onClose} color="primary">
             Close
           </Button>

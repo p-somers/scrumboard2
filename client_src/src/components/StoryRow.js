@@ -1,16 +1,13 @@
-import React from 'react';
+import React from "react";
 
-import './StoryRow.css';
+import "./StoryRow.css";
 
 class StoryRow extends React.Component {
-
   render() {
-    let {story} = this.props;
+    let { story } = this.props;
     return (
       <div className="storyRow">
-        <div className="storyTitle">
-          {story.name}
-        </div>
+        <div className="storyTitle">{story.name}</div>
       </div>
     );
   }

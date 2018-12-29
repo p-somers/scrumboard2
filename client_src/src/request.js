@@ -1,16 +1,16 @@
-import {apiBaseUrl} from "./properties";
+import { apiBaseUrl } from "./properties";
 
 const request = (method, relativeUrl, opts) => {
   let options = {
-    credentials: 'include',
+    credentials: "include",
     method: method,
     ...opts
   };
 
   if (options.body) {
-    if (typeof options.body === 'object') {
+    if (typeof options.body === "object") {
       options.headers = {
-        'content-type': 'application/json'
+        "content-type": "application/json"
       };
       options.body = JSON.stringify(options.body);
     }
@@ -26,13 +26,8 @@ const request = (method, relativeUrl, opts) => {
     });
 };
 
-const get = request.bind(this, 'GET');
-const post = request.bind(this, 'POST');
-const put = request.bind(this, 'PUT');
+const get = request.bind(this, "GET");
+const post = request.bind(this, "POST");
+const put = request.bind(this, "PUT");
 
-export {
-  request,
-  get,
-  post,
-  put
-};
+export { request, get, post, put };

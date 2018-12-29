@@ -1,25 +1,25 @@
-import React from 'react';
-import {withStyles} from '@material-ui/core/styles';
+import React from "react";
+import { withStyles } from "@material-ui/core/styles";
 
 import LoginFormWindow from "../components/LoginFormWindow";
 import RegisterFormWindow from "../components/RegisterFormWindow";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 
 const styles = theme => ({
   appBar: {
-    position: 'relative',
+    position: "relative"
   },
   layout: {
-    width: 'auto',
+    width: "auto",
     marginLeft: theme.spacing.unit * 2,
     marginRight: theme.spacing.unit * 2,
     [theme.breakpoints.up(600 + theme.spacing.unit * 2 * 2)]: {
       width: 600,
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
+      marginLeft: "auto",
+      marginRight: "auto"
+    }
   },
   paper: {
     marginTop: theme.spacing.unit * 3,
@@ -28,74 +28,73 @@ const styles = theme => ({
     [theme.breakpoints.up(600 + theme.spacing.unit * 3 * 2)]: {
       marginTop: theme.spacing.unit * 6,
       marginBottom: theme.spacing.unit * 6,
-      padding: theme.spacing.unit * 3,
-    },
+      padding: theme.spacing.unit * 3
+    }
   },
   stepper: {
-    padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit * 5}px`,
+    padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit * 5}px`
   },
   buttons: {
-    display: 'flex',
-    width: '100%'
+    display: "flex",
+    width: "100%"
   },
   alignLeft: {
-    'align-self': 'flex-start'
+    "align-self": "flex-start"
   },
   alignRight: {
-    'align-self': 'flex-end'
+    "align-self": "flex-end"
   },
   button: {
     marginTop: theme.spacing.unit * 3,
-    marginLeft: theme.spacing.unit,
-  },
+    marginLeft: theme.spacing.unit
+  }
 });
 
 class LoginPage extends React.Component {
   state = {
-    'page': 'login',
-    'prevPage': 'login',
-    'userConfirmed': false
+    page: "login",
+    prevPage: "login",
+    userConfirmed: false
   };
 
   onRegister = () => () => {
-    this.setState({userConfirmed: true, page: 'login'});
+    this.setState({ userConfirmed: true, page: "login" });
   };
 
-
   changePage = page => () => {
-    this.setState({page});
+    this.setState({ page });
   };
 
   onFieldChanged = name => event => {
     this.setState({
-      [name]: event.target.value,
+      [name]: event.target.value
     });
   };
 
   onSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
-    this.setState({open: false});
+    this.setState({ open: false });
   };
 
   content() {
     switch (this.state.page) {
-      case 'login':
+      case "login":
         return (
           <LoginFormWindow
             handleChange={this.onFieldChanged}
-            onRegisterButton={this.changePage('register')}
+            onRegisterButton={this.changePage("register")}
             onLogin={this.props.onLogin}
           />
         );
-      case 'register':
+      case "register":
         return (
           <RegisterFormWindow
             //handleChange={this.onFieldChanged}
             onRegister={this.onRegister()}
-            onBackButton={this.changePage('login')}
+            onBackButton={this.changePage("login")}
             onSubmitButton={this.registerUser}
           />
         );
@@ -105,19 +104,19 @@ class LoginPage extends React.Component {
   }
 
   render() {
-    let {classes} = this.props;
+    let { classes } = this.props;
     return (
       <React.Fragment>
         {this.content()}
         <Snackbar
           anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
+            vertical: "bottom",
+            horizontal: "center"
           }}
           open={this.state.userConfirmed}
           onClose={this.onSnackbarClose}
           ContentProps={{
-            'aria-describedby': 'message-id',
+            "aria-describedby": "message-id"
           }}
           message={<span>User Created! Please login</span>}
           action={[
@@ -128,12 +127,12 @@ class LoginPage extends React.Component {
               className={classes.close}
               onClick={this.onSnackbarClose}
             >
-              <CloseIcon/>
-            </IconButton>,
+              <CloseIcon />
+            </IconButton>
           ]}
         />
       </React.Fragment>
-    )
+    );
   }
 }
 
